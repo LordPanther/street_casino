@@ -16,19 +16,19 @@ class _GameScreenState extends State<GameScreen> {
   @override
   void initState() {
     super.initState();
-    // tempFunc();
+    tempFunc();
   }
 
   void tempFunc() async {
     final service = DeckService();
 
     final deck = await service.newDeck();
-
-    if (kDebugMode) {
-      print(deck.deck_id);
-      print(deck.remaining);
-      print(deck.shuffled);
-    }
+    print(deck.remaining);
+    print("=======");
+    final draw = await service.drawCards(deck, count: 7);
+    print(draw.cards.length);
+    print("=======");
+    print(draw.remaining);
   }
 
   @override

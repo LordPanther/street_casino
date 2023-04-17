@@ -37,4 +37,44 @@ class CardModel {
         return Suit.Other;
     }
   }
+
+  static String suitToString(Suit suit) {
+    switch (suit) {
+      case Suit.Hearts:
+        return "Hearts";
+      case Suit.Clubs:
+        return "Clubs";
+      case Suit.Diamonds:
+        return "Diamonds";
+      case Suit.Spades:
+        return "Spades";
+      case Suit.Other:
+        return "Other";
+    }
+  }
+
+  static String stringToUnicode(Suit suit) {
+    switch (suit) {
+      case Suit.Hearts:
+        return "\u2665";
+      case Suit.Clubs:
+        return "\u2663";
+      case Suit.Diamonds:
+        return "\u2666";
+      case Suit.Spades:
+        return "\u2660";
+      case Suit.Other:
+        return "Other";
+    }
+  }
+
+  static Color suitToColor(Suit suit) {
+    switch (suit) {
+      case Suit.Hearts:
+      case Suit.Diamonds:
+        return Colors.red;
+      default:
+        return Colors.black;
+    }
+  }
 }

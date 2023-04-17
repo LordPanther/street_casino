@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:street_casino/models/card_model.dart';
 
 class DrawModel {
   final int remaining;
-  final List<Card> cards;
+  final List<CardModel> cards;
 
   DrawModel({
     required this.remaining,
@@ -10,7 +11,10 @@ class DrawModel {
   });
 
   factory DrawModel.fromJson(Map<String, dynamic> json) {
+    final cards = json['cards']
+      .map<CardModel>((card) => CardModel.fromJson(card))
+      .toList();
 
-    return DrawModel(remaining: json['remaining'], cards: []);
+    return DrawModel(remaining: json['remaining'], cards: cards);
   }
 }

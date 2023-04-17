@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:street_casino/services/deck_service.dart';
 
@@ -21,7 +22,11 @@ class _GameScreenState extends State<GameScreen> {
   void tempFunc() async {
     final service = DeckService();
 
-    service.newDeck();
+    final data = await service.newDeck();
+
+    if (kDebugMode) {
+      print(data);
+    }
   }
 
   @override

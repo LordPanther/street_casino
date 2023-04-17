@@ -1,8 +1,10 @@
+import 'package:street_casino/models/deck_model.dart';
+import 'package:street_casino/models/draw_model.dart';
 import 'package:street_casino/services/api_service.dart';
 
 class DeckService extends ApiService{
 
-  Future<dynamic> newDeck([int deckCount = 1]) async {
+  Future<DeckModel> newDeck([int deckCount = 1]) async {
     final data = await httpGet(
       '/deck/new/shuffle',
       params: {
@@ -10,8 +12,16 @@ class DeckService extends ApiService{
       },
     );
 
-    return data;
+    return DeckModel.fromJson(data);
 
   }
 
+  Future<DrawModel> drawCards(DeckModel deck, {int count = 1}) async {
+    final data = await httpGet(
+      '/deck/${deck.deck_id}/draw',
+      params: {'count': count},
+    );
+
+    return DrawModel.fromJson(data);
+  }
 }

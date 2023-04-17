@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:street_casino/pages/homepage.dart';
+import 'package:street_casino/screens/game_screen.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -10,10 +10,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
+      title: 'Card Game',
       debugShowCheckedModeBanner: false,
-      home: HomePage()
-      ,
+      theme: ThemeData(
+        primarySwatch: Colors.green
+      ),
+      home: const GameScreen(),
     );
   }
 }

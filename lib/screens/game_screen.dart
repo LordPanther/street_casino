@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:street_casino/components/player_model.dart';
+import 'package:street_casino/providers/game_provider.dart';
 import 'package:street_casino/services/deck_service.dart';
 
 import '../components/game_board.dart';
@@ -12,22 +15,12 @@ class GameScreen extends StatefulWidget {
 
 class _GameScreenState extends State<GameScreen> {
 
+  late final GameProvider _gameProvider;
+
   @override
   void initState() {
+    _gameProvider = Provider.of<GameProvider>(context, listen: false);
     super.initState();
-    // tempFunc();
-  }
-
-  void tempFunc() async {
-    final service = DeckService();
-
-    final deck = await service.newDeck();
-    print(deck.remaining);
-    print("=======");
-    final draw = await service.drawCards(deck, count: 7);
-    print(draw.cards.length);
-    print("=======");
-    print(draw.remaining);
   }
 
   @override
@@ -37,7 +30,14 @@ class _GameScreenState extends State<GameScreen> {
         title: const Text('Card Game'),
         actions: [
           TextButton(
-              onPressed: () {},
+              onPressed: () async {
+                final players = [
+                  PlayerModel(name: "Lindani", isHuman: true),
+                  PlayerModel(name: "Bot", isHuman: false)
+                ];
+
+                await _gameProvider.newGame(players);
+              },
               child: const Text(
                 'New Game',
                 style: TextStyle(color: Colors.white),

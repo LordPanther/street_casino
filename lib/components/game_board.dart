@@ -66,6 +66,9 @@ class GameBoard extends StatelessWidget {
                         ),
                         CardList(
                           player: model.players[0],
+                          onPlayCard: (CardModel card) {
+                            model.playCard(player: model.players[0], card: card);
+                          },
                         ),
                       ],
                     ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:street_casino/components/card_list.dart';
+import 'package:street_casino/components/discard_pile.dart';
 import 'package:street_casino/components/player_model.dart';
 import 'package:street_casino/components/playing_card.dart';
 import 'package:street_casino/models/card_model.dart';
@@ -20,19 +21,53 @@ class GameBoard extends StatelessWidget {
                 children: [
                   Align(
                     alignment: Alignment.center,
-                    child: GestureDetector(
-                      onTap: () async {
-                        await model.drawCards(model.players.first);
-                      },
-                        child: DeckPile(
-                            remaining: model.currentDeck!.remaining
-                        )
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        GestureDetector(
+                          onTap: () async {
+                            await model.drawCards(model.turn.currentPlayer);
+                          },
+                            child: DeckPile(
+                                remaining: model.currentDeck!.remaining
+                            )
+                        ),
+                        const SizedBox(width: 8.0),
+                        DiscardPile(cards: model.discards)
+                      ],
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: CardList(
+                      player: model.players[1],
                     ),
                   ),
                   Align(
                     alignment: Alignment.bottomCenter,
-                    child: CardList(
-                      player: model.players[0],
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              if (model.turn.currentPlayer == model.players[0])
+                                ElevatedButton(
+                                  onPressed: model.canEndTurn
+                                    ? () {
+                                      model.endTurn();
+                                    } : null,
+                                    child: const Text("End Turn")
+                                )
+                            ],
+                          ),
+                        ),
+                        CardList(
+                          player: model.players[0],
+                        ),
+                      ],
                     ),
                   )
                 ],

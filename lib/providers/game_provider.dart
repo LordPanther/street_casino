@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:street_casino/constants.dart';
 import 'package:street_casino/models/card_model.dart';
 import 'package:street_casino/models/deck_model.dart';
 import 'package:street_casino/services/deck_service.dart';
@@ -6,7 +7,7 @@ import 'package:street_casino/services/deck_service.dart';
 import '../components/player_model.dart';
 import '../models/turn_model.dart';
 
-class GameProvider with ChangeNotifier {
+abstract class GameProvider with ChangeNotifier {
   GameProvider() {
     _service = DeckService();
   }
@@ -44,14 +45,30 @@ class GameProvider with ChangeNotifier {
 
   Future<void> setupBoard() async {}
 
+  Future<void> drawCardToDiscardPile({int count = 1}) async {
+    final draw = await _service.drawCards(_currentDeck!, count: count);
+
+    _currentDeck!.remaining = draw.remaining;
+    _discards.addAll(draw.cards);
+
+    notifyListeners();
+  }
+
+  void setLastPlayed(CardModel card) {
+    gameState[GS_LAST_SUIT] = card.suit;
+    gameState[GS_LAST_VALUE] = card.value;
+
+    notifyListeners();
+  }
+
   bool get canDrawCard {
     return turn.drawCount < 1;
   }
 
-  Future<void> drawCards(PlayerModel player, {int count = 1}) async {
+  Future<void> drawCards(PlayerModel player, {int count = 1, bool allowAnyTime = false}) async {
 
     if (currentDeck == null) return;
-    if (!canDrawCard) return;
+    if (!allowAnyTime && !canDrawCard) return;
 
     final draw = await _service.drawCards(_currentDeck!, count: count);
 
@@ -81,6 +98,8 @@ class GameProvider with ChangeNotifier {
     await applyCardSideEffect(card);
 
     _turn.actionCount += 1;
+
+    setLastPlayed(card);
 
     notifyListeners();
 

@@ -7,6 +7,7 @@ import 'package:street_casino/components/playing_card.dart';
 import 'package:street_casino/models/card_model.dart';
 
 import '../providers/game_provider.dart';
+import '../providers/street_casino_game_provider.dart';
 import 'deck_pile.dart';
 
 class GameBoard extends StatelessWidget {
@@ -14,7 +15,7 @@ class GameBoard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<GameProvider>(
+    return Consumer<StreetCasinoGameProvider>(
       builder: (context, model, child) {
         return model.currentDeck != null
             ? Stack(

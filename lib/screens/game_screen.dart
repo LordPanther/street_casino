@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:street_casino/components/player_model.dart';
 import 'package:street_casino/providers/game_provider.dart';
+import 'package:street_casino/providers/street_casino_game_provider.dart';
 import 'package:street_casino/services/deck_service.dart';
 
 import '../components/game_board.dart';
@@ -15,11 +16,11 @@ class GameScreen extends StatefulWidget {
 
 class _GameScreenState extends State<GameScreen> {
 
-  late final GameProvider _gameProvider;
+  late final StreetCasinoGameProvider _gameProvider;
 
   @override
   void initState() {
-    _gameProvider = Provider.of<GameProvider>(context, listen: false);
+    _gameProvider = Provider.of<StreetCasinoGameProvider>(context, listen: false);
     super.initState();
   }
 

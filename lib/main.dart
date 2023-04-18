@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:street_casino/providers/game_provider.dart';
+import 'package:street_casino/providers/street_casino_game_provider.dart';
 import 'package:street_casino/screens/game_screen.dart';
 
 void main() {
   runApp(
     MultiProvider(
         providers: [ChangeNotifierProvider(
-            create: (_) => GameProvider())],
+            create: (_) => StreetCasinoGameProvider())],
             child: const MyApp(),
     )
   );

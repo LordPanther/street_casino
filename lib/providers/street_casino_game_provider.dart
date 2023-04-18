@@ -1,4 +1,7 @@
+import 'package:flutter/material.dart';
+import 'package:street_casino/components/suit_chooser_modal.dart';
 import 'package:street_casino/constants.dart';
+import 'package:street_casino/main.dart';
 import 'package:street_casino/models/card_model.dart';
 import 'package:street_casino/providers/game_provider.dart';
 
@@ -49,10 +52,36 @@ class StreetCasinoGameProvider extends GameProvider {
 
   @override
   Future<void> applyCardSideEffect(CardModel card) async {
-  //   8
-  //   2
-  //   J
-  //   QS
+
+    if (card.value == "8") {
+      Suit suit;
+
+      if (turn.currentPlayer.isHuman) {
+        suit = await showDialog(
+          context: navigatorKey.currentContext!,
+          builder: (_) => const SuitChooserModal(),
+          barrierDismissible: false,
+        );
+      } else {
+        suit = turn.currentPlayer.cards.first.suit;
+      }
+
+      gameState[GS_LAST_SUIT] = suit;
+      setTrump(suit);
+      showToast("${turn.currentPlayer} has changed it to ${CardModel.suitToString(suit)}");
+
+    } else if (card.value == "2") {
+      await drawCards(turn.otherPlayer, count: 2, allowAnyTime: true);
+      showToast("${turn.otherPlayer.name} has to draw 2 cards!");
+    } else if (card.value == "QUEEN" && card.suit == Suit.Spades) {
+      await drawCards(turn.otherPlayer, count: 5, allowAnyTime: true);
+      showToast("${turn.otherPlayer.name} has to draw 5 cards!");
+    } else if (card.value == "JACK") {
+      showToast("${turn.otherPlayer.name} has to draw 2 cards!");
+      skipTurn();
+    }
+
+    notifyListeners();
   }
 
   @override

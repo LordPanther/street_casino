@@ -1,5 +1,6 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:street_casino/constants.dart';
+import 'package:street_casino/main.dart';
 import 'package:street_casino/models/card_model.dart';
 import 'package:street_casino/models/deck_model.dart';
 import 'package:street_casino/services/deck_service.dart';
@@ -28,6 +29,7 @@ abstract class GameProvider with ChangeNotifier {
   CardModel? get discardTop => _discards.isEmpty ? null : _discards.last;
 
   Map<String, dynamic> gameState = {};
+  Widget? bottomWidget;
 
   Future<void> newGame(List<PlayerModel> players) async {
     final deck = await _service.newDeck();
@@ -54,9 +56,31 @@ abstract class GameProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void setBottomWidget(Widget? widget) {
+    bottomWidget = widget;
+
+    notifyListeners();
+  }
+
+  void setTrump(Suit suit) {
+    setBottomWidget(
+     Card(
+       child: Text(
+         CardModel.suitToUnicode(suit),
+         style: TextStyle(
+           fontSize: 24,
+           color: CardModel.suitToColor(suit),
+         ),
+       ),
+     )
+    );
+  }
+
   void setLastPlayed(CardModel card) {
     gameState[GS_LAST_SUIT] = card.suit;
     gameState[GS_LAST_VALUE] = card.value;
+
+    setTrump(card.suit);
 
     notifyListeners();
   }
@@ -95,11 +119,11 @@ abstract class GameProvider with ChangeNotifier {
 
     _discards.add(card);
 
-    await applyCardSideEffect(card);
-
     _turn.actionCount += 1;
 
     setLastPlayed(card);
+
+    await applyCardSideEffect(card);
 
     notifyListeners();
 
@@ -121,20 +145,36 @@ abstract class GameProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void skipTurn() {
+    _turn.nextTurn();
+    _turn.nextTurn();
+
+    notifyListeners();
+  }
+
   Future<void> botTurn() async {
     await Future.delayed(const Duration(microseconds: 500));
     await drawCards(_turn.currentPlayer);
     await Future.delayed(const Duration(microseconds: 500));
 
     if (_turn.currentPlayer.cards.isNotEmpty) {
-
       await Future.delayed(const Duration(microseconds: 1000));
       playCard(
           player: _turn.currentPlayer, card: _turn.currentPlayer.cards.first);
-
-      if (canEndTurn) {
-        endTurn();
-      }
     }
+
+    if (canEndTurn) {
+      endTurn();
+    }
+  }
+
+  void showToast(String message, {int seconds = 3,SnackBarAction? action}) {
+    rootScaffoldMessengerKey.currentState!.showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: Duration(seconds: seconds),
+        action: action,
+      ),
+    );
   }
 }

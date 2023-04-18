@@ -22,19 +22,25 @@ class GameBoard extends StatelessWidget {
                 children: [
                   Align(
                     alignment: Alignment.center,
-                    child: Row(
+                    child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        GestureDetector(
-                          onTap: () async {
-                            await model.drawCards(model.turn.currentPlayer);
-                          },
-                            child: DeckPile(
-                                remaining: model.currentDeck!.remaining
-                            )
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            GestureDetector(
+                              onTap: () async {
+                                await model.drawCards(model.turn.currentPlayer);
+                              },
+                                child: DeckPile(
+                                    remaining: model.currentDeck!.remaining
+                                )
+                            ),
+                            const SizedBox(width: 8.0),
+                            DiscardPile(cards: model.discards)
+                          ],
                         ),
-                        const SizedBox(width: 8.0),
-                        DiscardPile(cards: model.discards)
+                        if (model.bottomWidget != null) model.bottomWidget!
                       ],
                     ),
                   ),

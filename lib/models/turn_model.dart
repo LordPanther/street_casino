@@ -21,4 +21,8 @@ class Turn {
     drawCount = 0;
     actionCount = 0;
   }
+
+  PlayerModel get otherPlayer {
+    return players.firstWhere((p) => p != currentPlayer);
+  }
  }

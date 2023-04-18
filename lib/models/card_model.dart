@@ -53,7 +53,7 @@ class CardModel {
     }
   }
 
-  static String stringToUnicode(Suit suit) {
+  static String suitToUnicode(Suit suit) {
     switch (suit) {
       case Suit.Hearts:
         return "\u2665";

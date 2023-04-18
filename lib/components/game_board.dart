@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:street_casino/components/card_list.dart';
 import 'package:street_casino/components/player_model.dart';
 import 'package:street_casino/components/playing_card.dart';
 import 'package:street_casino/models/card_model.dart';
 
 import '../providers/game_provider.dart';
+import 'deck_pile.dart';
 
 class GameBoard extends StatelessWidget {
   const GameBoard({Key? key}) : super(key: key);
@@ -18,7 +20,20 @@ class GameBoard extends StatelessWidget {
                 children: [
                   Align(
                     alignment: Alignment.center,
-                    child: Text("TEST ${model.currentDeck!.remaining}"),
+                    child: GestureDetector(
+                      onTap: () async {
+                        await model.drawCards(model.players.first);
+                      },
+                        child: DeckPile(
+                            remaining: model.currentDeck!.remaining
+                        )
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: CardList(
+                      player: model.players[0],
+                    ),
                   )
                 ],
               )

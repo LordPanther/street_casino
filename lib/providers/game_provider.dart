@@ -36,11 +36,11 @@ abstract class GameProvider with ChangeNotifier {
     _currentDeck = deck;
     _players = players;
     _discards = [];
+    setupBoard();
     _turn = Turn(
       players: players,
       currentPlayer: players.first,
     );
-    setupBoard();
 
     notifyListeners();
   }
@@ -106,6 +106,9 @@ abstract class GameProvider with ChangeNotifier {
   }
 
   bool canPlayCard(CardModel card) {
+
+    if (gameOver) return false;
+
     return _turn.actionCount < 1;
   }
 
@@ -124,6 +127,10 @@ abstract class GameProvider with ChangeNotifier {
     setLastPlayed(card);
 
     await applyCardSideEffect(card);
+
+    if (gameOver) {
+      finishGame();
+    }
 
     notifyListeners();
 
@@ -148,6 +155,16 @@ abstract class GameProvider with ChangeNotifier {
   void skipTurn() {
     _turn.nextTurn();
     _turn.nextTurn();
+
+    notifyListeners();
+  }
+
+  bool get gameOver {
+    return currentDeck!.remaining < 1;
+  }
+
+  void finishGame() {
+    showToast("Game Over!");
 
     notifyListeners();
   }

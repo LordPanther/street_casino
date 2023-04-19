@@ -16,6 +16,9 @@ class StreetCasinoGameProvider extends GameProvider {
     await drawCardToDiscardPile();
 
     setLastPlayed(discardTop!);
+
+    turn.drawCount = 0;
+    turn.actionCount = 0;
   }
 
   @override
@@ -68,7 +71,7 @@ class StreetCasinoGameProvider extends GameProvider {
 
       gameState[GS_LAST_SUIT] = suit;
       setTrump(suit);
-      showToast("${turn.currentPlayer} has changed it to ${CardModel.suitToString(suit)}");
+      showToast("${turn.currentPlayer.name} has changed it to ${CardModel.suitToString(suit)}");
 
     } else if (card.value == "2") {
       await drawCards(turn.otherPlayer, count: 2, allowAnyTime: true);
@@ -77,9 +80,25 @@ class StreetCasinoGameProvider extends GameProvider {
       await drawCards(turn.otherPlayer, count: 5, allowAnyTime: true);
       showToast("${turn.otherPlayer.name} has to draw 5 cards!");
     } else if (card.value == "JACK") {
-      showToast("${turn.otherPlayer.name} has to draw 2 cards!");
+      showToast("${turn.otherPlayer.name} misses a turn!");
       skipTurn();
     }
+
+    notifyListeners();
+  }
+
+  @override
+  bool get gameOver {
+    if (turn.currentPlayer.cards.isEmpty) {
+      return true;
+    }
+
+    return false;
+  }
+
+  @override
+  void finishGame() {
+    showToast("Game over!, ${turn.currentPlayer.name} WINS!.");
 
     notifyListeners();
   }

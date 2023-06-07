@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:street_casino/components/player_model.dart';
-import 'package:street_casino/providers/game_provider.dart';
 import 'package:street_casino/providers/street_casino_game_provider.dart';
-import 'package:street_casino/services/deck_service.dart';
 
 import '../components/game_board.dart';
 
@@ -26,27 +23,32 @@ class _GameScreenState extends State<GameScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Card Game'),
-        actions: [
-          TextButton(
-              onPressed: () async {
-                final players = [
-                  PlayerModel(name: "Lindani", isHuman: true),
-                  PlayerModel(name: "Bot", isHuman: false)
-                ];
+    return const Scaffold(
+      // appBar: AppBar(
+      //   title: const Text('Card Game'),
+      //   actions: [
+      //     TextButton(
+      //         onPressed: () async {
+      //           final players = [
+      //             PlayerModel(name: "Lindani", isHuman: true),
+      //             PlayerModel(name: "Bot A", isHuman: false),
+      //             PlayerModel(name: "Bot B", isHuman: false),
+      //             PlayerModel(name: "Bot C", isHuman: false)
+      //           ];
+      //
+      //           await _gameProvider.newGame(players);
+      //         },
+      //         child: const Text(
+      //           'New Game',
+      //           style: TextStyle(color: Colors.white),
+      //         )
+      //     ),
+      //   ],
+      // ),
 
-                await _gameProvider.newGame(players);
-              },
-              child: const Text(
-                'New Game',
-                style: TextStyle(color: Colors.white),
-              )
-          ),
-        ],
-      ),
-      body: const GameBoard(),
+      // App Bar disabled temporarily
+
+      body: GameBoard(),
     );
   }
 }

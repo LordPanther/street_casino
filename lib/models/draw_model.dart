@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:street_casino/models/card_model.dart';
 
 class DrawModel {

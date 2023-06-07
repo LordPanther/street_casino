@@ -5,10 +5,9 @@ import 'package:street_casino/constants.dart';
 import 'package:street_casino/models/card_model.dart';
 
 class CardList extends StatelessWidget {
-
   final double size;
   final PlayerModel player;
-  final Function(CardModel) ? onPlayCard;
+  final Function(CardModel)? onPlayCard;
 
   const CardList({
     Key? key,
@@ -19,23 +18,45 @@ class CardList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: CARD_HEIGHT * size,
-      width: double.infinity,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: player.cards.length,
-        itemBuilder: (context, index) {
-          final card = player.cards[index];
-          return PlayingCard(
-            card: card,
-            size: size,
-            // visible: player.isHuman,
-            visible: true,
-            onPlayCard: onPlayCard,
-          );
-        }
-      ),
-    );
+    return player.isHuman
+        ? SizedBox(
+            height: CARD_HEIGHT * size,
+            width: double.infinity,
+            child: Stack(
+              children: List.generate(player.cards.length, (index) {
+                final card = player.cards[index];
+                final cardPosition = index * 30.0;
+
+                return Positioned(
+                  left: cardPosition,
+                  child: PlayingCard(
+                    card: card,
+                    size: size,
+                    visible: player.isHuman,
+                    onPlayCard: onPlayCard,
+                  ),
+                );
+              }).toList(),
+            ),
+          )
+        : SizedBox(
+            height: CARD_HEIGHT * size,
+            width: double.infinity,
+            child: Stack(
+              children: List.generate(player.cards.length, (index) {
+                final card = player.cards[index];
+                final cardPosition = index * 10.0;
+
+                return Positioned(
+                  left: cardPosition,
+                  child: PlayingCard(
+                    card: card,
+                    size: size,
+                    visible: player.isHuman,
+                    onPlayCard: onPlayCard,
+                  ),
+                );
+              }).toList(),
+            ));
   }
 }

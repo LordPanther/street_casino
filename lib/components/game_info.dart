@@ -29,14 +29,14 @@ class PlayerInfo extends StatelessWidget {
                 child: Text(
                   "${p.name} (${p.cards.length})",
                   style: TextStyle(
-                    color: isCurrent ? Colors.black : Colors.white,
-                    fontWeight: FontWeight.w700
+                      color: isCurrent ? Colors.black : Colors.white,
+                      fontWeight: FontWeight.w700
                   ),
                 ),
               ),
             );
           }).toList(),
-      ),
+        ),
       ),
     );
   }

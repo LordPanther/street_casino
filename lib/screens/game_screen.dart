@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:street_casino/providers/street_casino_game_provider.dart';
 
+import '../components/t_board.dart';
 import '../components/game_board.dart';
 
 class GameScreen extends StatefulWidget {
@@ -12,12 +13,12 @@ class GameScreen extends StatefulWidget {
 }
 
 class _GameScreenState extends State<GameScreen> {
-
   late final StreetCasinoGameProvider _gameProvider;
 
   @override
   void initState() {
-    _gameProvider = Provider.of<StreetCasinoGameProvider>(context, listen: false);
+    _gameProvider =
+        Provider.of<StreetCasinoGameProvider>(context, listen: false);
     super.initState();
   }
 
@@ -45,8 +46,6 @@ class _GameScreenState extends State<GameScreen> {
       //     ),
       //   ],
       // ),
-
-      // App Bar disabled temporarily
 
       body: GameBoard(),
     );

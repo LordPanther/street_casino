@@ -63,17 +63,15 @@ abstract class GameProvider with ChangeNotifier {
   }
 
   void setTrump(Suit suit) {
-    setBottomWidget(
-     Card(
-       child: Text(
-         CardModel.suitToUnicode(suit),
-         style: TextStyle(
-           fontSize: 24,
-           color: CardModel.suitToColor(suit),
-         ),
-       ),
-     )
-    );
+    setBottomWidget(Card(
+      child: Text(
+        CardModel.suitToUnicode(suit),
+        style: TextStyle(
+          fontSize: 24,
+          color: CardModel.suitToColor(suit),
+        ),
+      ),
+    ));
   }
 
   void setLastPlayed(CardModel card) {
@@ -89,8 +87,8 @@ abstract class GameProvider with ChangeNotifier {
     return turn.drawCount < 1;
   }
 
-  Future<void> drawCards(PlayerModel player, {int count = 1, bool allowAnyTime = false}) async {
-
+  Future<void> drawCards(PlayerModel player,
+      {int count = 1, bool allowAnyTime = false}) async {
     if (currentDeck == null) return;
     if (!allowAnyTime && !canDrawCard) return;
 
@@ -106,7 +104,6 @@ abstract class GameProvider with ChangeNotifier {
   }
 
   bool canPlayCard(CardModel card) {
-
     if (gameOver) return false;
 
     return _turn.actionCount < 1;
@@ -133,7 +130,6 @@ abstract class GameProvider with ChangeNotifier {
     }
 
     notifyListeners();
-
   }
 
   Future<void> applyCardSideEffect(CardModel card) async {}
@@ -145,7 +141,7 @@ abstract class GameProvider with ChangeNotifier {
   void endTurn() {
     _turn.nextTurn();
 
-    if(_turn.currentPlayer.isBot) {
+    if (_turn.currentPlayer.isBot) {
       botTurn();
     }
 
@@ -185,7 +181,7 @@ abstract class GameProvider with ChangeNotifier {
     }
   }
 
-  void showToast(String message, {int seconds = 3,SnackBarAction? action}) {
+  void showToast(String message, {int seconds = 3, SnackBarAction? action}) {
     rootScaffoldMessengerKey.currentState!.showSnackBar(
       SnackBar(
         content: Text(message),

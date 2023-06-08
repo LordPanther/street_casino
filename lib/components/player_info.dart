@@ -4,9 +4,7 @@ import '../models/turn_model.dart';
 
 class PlayerInfo extends StatelessWidget {
   final Turn turn;
-  const PlayerInfo({
-    Key? key, required this.turn
-  }) : super(key: key);
+  const PlayerInfo({Key? key, required this.turn}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,14 +27,13 @@ class PlayerInfo extends StatelessWidget {
                 child: Text(
                   "${p.name} (${p.cards.length})",
                   style: TextStyle(
-                    color: isCurrent ? Colors.black : Colors.white,
-                    fontWeight: FontWeight.w700
-                  ),
+                      color: isCurrent ? Colors.black : Colors.white,
+                      fontWeight: FontWeight.w700),
                 ),
               ),
             );
           }).toList(),
-      ),
+        ),
       ),
     );
   }

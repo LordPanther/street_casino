@@ -16,7 +16,7 @@ class PlayerModel {
   }
 
   removeCard(CardModel card) {
-    cards.removeWhere((c) => c.value == card.value && c.suit == card.suit);
+    cards.removeWhere((c) => c.value == card.value); //&& c.suit == card.suit
   }
 
   bool get isBot {

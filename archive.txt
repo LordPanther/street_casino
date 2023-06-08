@@ -81,3 +81,21 @@ Game GameBoard
             //     ),
             //   ],
             // )
+
+
+            //DiscardPile(cards: model.discards)
+
+
+
+            Column(
+                            children: [
+                              if (model.turn.currentPlayer == model.players[0])
+                                ElevatedButton(
+                                    onPressed: model.canEndTurn
+                                        ? () {
+                                            model.endTurn();
+                                          }
+                                        : null,
+                                    child: const Text("End Turn"))
+                            ],
+                          ),

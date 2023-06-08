@@ -26,10 +26,12 @@ class DiscardPile extends StatelessWidget {
         ),
       ),
       child: Stack(
-        children:
-          cards.map((card) => PlayingCard(card: card, visible: true,)).toList()
-
-      ),
+          children: cards
+              .map((card) => PlayingCard(
+                    card: card,
+                    visible: true,
+                  ))
+              .toList()),
     );
   }
 }

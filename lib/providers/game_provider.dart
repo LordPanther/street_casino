@@ -24,6 +24,9 @@ abstract class GameProvider with ChangeNotifier {
   List<PlayerModel> _players = [];
   List<PlayerModel> get players => _players;
 
+  CardModel? _cardToPlay;
+  CardModel? get cardToPlay => _cardToPlay;
+
   List<CardModel> _discards = [];
   List<CardModel> get discards => _discards;
   CardModel? get discardTop => _discards.isEmpty ? null : _discards.last;
@@ -39,13 +42,15 @@ abstract class GameProvider with ChangeNotifier {
     setupBoard();
     _turn = Turn(
       players: players,
-      currentPlayer: players.first,
+      currentPlayer: players.first,   //Same as players[0]
     );
 
     notifyListeners();
   }
 
   Future<void> setupBoard() async {}
+
+  //Player draws card to an empty slot or own pile
 
   Future<void> drawCardToDiscardPile({int count = 1}) async {
     final draw = await _service.drawCards(_currentDeck!, count: count);
@@ -55,6 +60,8 @@ abstract class GameProvider with ChangeNotifier {
 
     notifyListeners();
   }
+
+  //Bottom widget that shows current suit
 
   void setBottomWidget(Widget? widget) {
     bottomWidget = widget;
@@ -83,20 +90,20 @@ abstract class GameProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  bool get canDrawCard {
-    return turn.drawCount < 1;
-  }
+  // bool get canDrawCard {
+  //   return turn.drawCount < 1;
+  // }
+
+  //When game starts each player is drawn 10 cards from the stack
 
   Future<void> drawCards(PlayerModel player,
       {int count = 1, bool allowAnyTime = false}) async {
     if (currentDeck == null) return;
-    if (!allowAnyTime && !canDrawCard) return;
+    if (!allowAnyTime) return;
 
     final draw = await _service.drawCards(_currentDeck!, count: count);
 
     player.addCards(draw.cards);
-
-    _turn.drawCount += count;
 
     _currentDeck!.remaining = draw.remaining;
 
@@ -104,39 +111,75 @@ abstract class GameProvider with ChangeNotifier {
   }
 
   bool canPlayCard(CardModel card) {
+
     if (gameOver) return false;
 
-    return _turn.actionCount < 1;
+    return true;
+
+    // return _turn.actionCount < 1;
   }
+
+  //Holding card to be played
+
+  Future<void> holdCard({
+    required PlayerModel player,
+    required CardModel card
+  }) async {
+    // print("Holding card in hand: ${card.value}, ${card.suit}");
+    _cardToPlay = card;
+
+    notifyListeners();
+  }
+
+  //When card is tapped this happens
+
+  Future<void> playCardHuman({
+    required PlayerModel player,
+    // required CardModel card,
+  }) async {
+
+    player.removeCard(_cardToPlay!);
+
+    _discards.add(_cardToPlay!);
+
+    setLastPlayed(_cardToPlay!);
+
+    // await applyCardSideEffect(card);
+
+    if (gameOver) {
+      finishGame();
+    }
+    notifyListeners();
+  }
+
+  //Bot card player
 
   Future<void> playCard({
     required PlayerModel player,
     required CardModel card,
   }) async {
-    if (!canPlayCard(card)) return;
+    print("playCard: ${card.suit}");
+    // if (!canPlayCard(card)) return;
 
     player.removeCard(card);
 
     _discards.add(card);
 
-    _turn.actionCount += 1;
-
     setLastPlayed(card);
 
-    await applyCardSideEffect(card);
+    // await applyCardSideEffect(card);
 
     if (gameOver) {
       finishGame();
     }
-
     notifyListeners();
   }
 
   Future<void> applyCardSideEffect(CardModel card) async {}
 
-  bool get canEndTurn {
-    return turn.drawCount > 0;
-  }
+  // bool get canEndTurn {
+  //   return turn.drawCount > 0;
+  // }
 
   void endTurn() {
     _turn.nextTurn();
@@ -148,12 +191,12 @@ abstract class GameProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void skipTurn() {
-    _turn.nextTurn();
-    _turn.nextTurn();
-
-    notifyListeners();
-  }
+  // void skipTurn() {
+  //   _turn.nextTurn();
+  //   _turn.nextTurn();
+  //
+  //   notifyListeners();
+  // }
 
   bool get gameOver {
     return currentDeck!.remaining < 1;
@@ -166,19 +209,20 @@ abstract class GameProvider with ChangeNotifier {
   }
 
   Future<void> botTurn() async {
-    await Future.delayed(const Duration(microseconds: 500));
-    await drawCards(_turn.currentPlayer);
-    await Future.delayed(const Duration(microseconds: 500));
 
     if (_turn.currentPlayer.cards.isNotEmpty) {
-      await Future.delayed(const Duration(microseconds: 1000));
+      await Future.delayed(const Duration(seconds: 1));
       playCard(
           player: _turn.currentPlayer, card: _turn.currentPlayer.cards.first);
     }
 
-    if (canEndTurn) {
-      endTurn();
-    }
+    //End bot turn and continue to next player
+
+    endTurn();
+
+    // if (canEndTurn) {
+    //   endTurn();
+    // }
   }
 
   void showToast(String message, {int seconds = 3, SnackBarAction? action}) {

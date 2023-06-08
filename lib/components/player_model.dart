@@ -1,14 +1,18 @@
+import 'package:street_casino/components/player_pile.dart';
+
 import '../models/card_model.dart';
 
 class PlayerModel {
   final String name;
   final bool isHuman;
   List<CardModel> cards;
+  List<PlayerPiles> playerSlots;
 
   PlayerModel({
     required this.name,
     this.cards = const [],
     this.isHuman = false,
+    this.playerSlots = const []
   });
 
   addCards(List<CardModel> newCards) {
@@ -22,4 +26,7 @@ class PlayerModel {
   bool get isBot {
     return !isHuman;
   }
+
+
+  // List<PlayerPiles> get slots => _playerSlots;
 }

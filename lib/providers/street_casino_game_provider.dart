@@ -15,33 +15,30 @@ class StreetCasinoGameProvider extends GameProvider {
 
     // await drawCardToDiscardPile();
 
-    // setLastPlayed(discardTop!);
+    setLastPlayed(discardTop!);
   }
 
-  @override
-  bool get canEndTurn {
-    return false;
-  }
+  //Checks to see if card at hand can be played
 
   @override
   bool canPlayCard(CardModel card) {
-    bool canPlay = false;
+    bool canPlay = true;
 
-    if (gameState[GS_LAST_SUIT] == null || gameState[GS_LAST_VALUE] == null) {
-      return false;
-    }
-
-    if (gameState[GS_LAST_SUIT] == card.suit) {
-      canPlay = true;
-    }
-
-    if (gameState[GS_LAST_VALUE] == card.value) {
-      canPlay = true;
-    }
-
-    if (card.value == "8") {
-      canPlay = true;
-    }
+    // if (gameState[GS_LAST_SUIT] == null || gameState[GS_LAST_VALUE] == null) {
+    //   return false;
+    // }
+    //
+    // if (gameState[GS_LAST_SUIT] == card.suit) {
+    //   canPlay = true;
+    // }
+    //
+    // if (gameState[GS_LAST_VALUE] == card.value) {
+    //   canPlay = true;
+    // }
+    //
+    // if (card.value == "8") {
+    //   canPlay = true;
+    // }
 
     return canPlay;
   }

@@ -18,6 +18,9 @@ abstract class GameProvider with ChangeNotifier {
   late Turn _turn;
   Turn get turn => _turn;
 
+  bool _hasPlayed = false;
+  bool get hasPlayed => _hasPlayed;
+
   DeckModel? _currentDeck;
   DeckModel? get currentDeck => _currentDeck;
 
@@ -90,10 +93,6 @@ abstract class GameProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // bool get canDrawCard {
-  //   return turn.drawCount < 1;
-  // }
-
   //When game starts each player is drawn 10 cards from the stack
 
   Future<void> drawCards(PlayerModel player,
@@ -149,6 +148,9 @@ abstract class GameProvider with ChangeNotifier {
     if (gameOver) {
       finishGame();
     }
+
+    _hasPlayed = true;
+
     notifyListeners();
   }
 
@@ -188,15 +190,10 @@ abstract class GameProvider with ChangeNotifier {
       botTurn();
     }
 
+    _hasPlayed = false;
+
     notifyListeners();
   }
-
-  // void skipTurn() {
-  //   _turn.nextTurn();
-  //   _turn.nextTurn();
-  //
-  //   notifyListeners();
-  // }
 
   bool get gameOver {
     return currentDeck!.remaining < 1;
@@ -211,7 +208,7 @@ abstract class GameProvider with ChangeNotifier {
   Future<void> botTurn() async {
 
     if (_turn.currentPlayer.cards.isNotEmpty) {
-      await Future.delayed(const Duration(seconds: 1));
+      await Future.delayed(const Duration(seconds: 3));
       playCard(
           player: _turn.currentPlayer, card: _turn.currentPlayer.cards.first);
     }
@@ -220,9 +217,6 @@ abstract class GameProvider with ChangeNotifier {
 
     endTurn();
 
-    // if (canEndTurn) {
-    //   endTurn();
-    // }
   }
 
   void showToast(String message, {int seconds = 3, SnackBarAction? action}) {

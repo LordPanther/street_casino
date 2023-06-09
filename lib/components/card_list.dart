@@ -4,6 +4,8 @@ import 'package:street_casino/components/playing_card.dart';
 import 'package:street_casino/constants.dart';
 import 'package:street_casino/models/card_model.dart';
 
+//PLayers Hands
+
 class CardList extends StatelessWidget {
   final double size;
   final PlayerModel player;
